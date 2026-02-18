@@ -25,8 +25,13 @@
 		}
 		else
 		{
-			$checkStmt = $conn->prepare("SELECT ID FROM Users WHERE Login=?");
-			$checkStmt->bind_param("s", $inData["login"]);
+			$cleanFirstName = trim($inData["firstName"]);
+			$cleanLastName = trim($inData["lastName"]);
+			$cleanLogin = trim($inData["login"]);
+			$cleanPassword = trim($inData["password"]);
+
+			$checkStmt = $conn->prepare("SELECT ID FROM Users WHERE LOWER(Login)=LOWER(?)");
+			$checkStmt->bind_param("s", $cleanLogin);
 			$checkStmt->execute();
 			$checkResult = $checkStmt->get_result();
 			
@@ -37,12 +42,12 @@
 			else
 			{
 				$stmt = $conn->prepare("INSERT INTO Users (firstName, lastName, Login, Password) VALUES (?, ?, ?, ?)");
-				$stmt->bind_param("ssss", $inData["firstName"], $inData["lastName"], $inData["login"], $inData["password"]);
+				$stmt->bind_param("ssss", $cleanFirstName, $cleanLastName, $cleanLogin, $cleanPassword);
 				
 				if( $stmt->execute() )
 				{
 					$newUserId = $conn->insert_id;
-					returnWithInfo( $inData["firstName"], $inData["lastName"], $newUserId );
+					returnWithInfo( $cleanFirstName, $cleanLastName, $newUserId );
 				}
 				else
 				{
@@ -98,8 +103,12 @@
 	 */
 	function returnWithError( $err )
 	{
-		$retValue = '{"id":0,"firstName":"","lastName":"","error":"' . $err . '"}';
-		sendResultInfoAsJson( $retValue );
+		sendResultInfoAsJson(json_encode(array(
+			"id" => 0,
+			"firstName" => "",
+			"lastName" => "",
+			"error" => $err
+		)));
 	}
 	
 	/**
@@ -112,8 +121,12 @@
 	 */
 	function returnWithInfo( $firstName, $lastName, $id )
 	{
-		$retValue = '{"id":' . $id . ',"firstName":"' . $firstName . '","lastName":"' . $lastName . '","error":""}';
-		sendResultInfoAsJson( $retValue );
+		sendResultInfoAsJson(json_encode(array(
+			"id" => (int)$id,
+			"firstName" => $firstName,
+			"lastName" => $lastName,
+			"error" => ""
+		)));
 	}
 	
 ?>

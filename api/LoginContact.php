@@ -22,8 +22,11 @@
 		}
 		else
 		{
-			$stmt = $conn->prepare("SELECT ID, firstName, lastName FROM Users WHERE Login=? AND Password=?");
-			$stmt->bind_param("ss", $inData["login"], $inData["password"]);
+			$cleanLogin = trim($inData["login"]);
+			$cleanPassword = trim($inData["password"]);
+
+			$stmt = $conn->prepare("SELECT ID, firstName, lastName FROM Users WHERE LOWER(Login)=LOWER(?) AND Password=?");
+			$stmt->bind_param("ss", $cleanLogin, $cleanPassword);
 			$stmt->execute();
 			$result = $stmt->get_result();
 
@@ -59,7 +62,7 @@
 			return [];
 		}
 		
-		return $decoded;
+		return $decoded ? $decoded : [];
 	}
 
 	/**
@@ -82,8 +85,12 @@
 	 */
 	function returnWithError( $err )
 	{
-		$retValue = '{"id":0,"firstName":"","lastName":"","error":"' . $err . '"}';
-		sendResultInfoAsJson( $retValue );
+		sendResultInfoAsJson(json_encode(array(
+			"id" => 0,
+			"firstName" => "",
+			"lastName" => "",
+			"error" => $err
+		)));
 	}
 	
 	/**
@@ -96,8 +103,12 @@
 	 */
 	function returnWithInfo( $firstName, $lastName, $id )
 	{
-		$retValue = '{"id":' . $id . ',"firstName":"' . $firstName . '","lastName":"' . $lastName . '","error":""}';
-		sendResultInfoAsJson( $retValue );
+		sendResultInfoAsJson(json_encode(array(
+			"id" => (int)$id,
+			"firstName" => $firstName,
+			"lastName" => $lastName,
+			"error" => ""
+		)));
 	}
 	
 ?>

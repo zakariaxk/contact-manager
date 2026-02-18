@@ -1,3 +1,5 @@
+let searchTimer;
+
 function initContactsPage() {
   readCookie();
 
@@ -21,8 +23,9 @@ async function searchContacts(query) {
   try {
     // SearchContact.php expects { search, userId }
     const data = await apiRequest("SearchContact", { search: query, userId });
-    renderContacts(data.results || []);
-    if (msg) msg.textContent = "Contacts retrieved";
+    const results = data.results || [];
+    renderContacts(results);
+    if (msg) msg.textContent = `${results.length} contact(s) found`;
   } catch (err) {
     if (msg) msg.textContent = err.message;
     renderContacts([]);
@@ -90,8 +93,8 @@ async function deleteContact(contactId) {
   if (!confirm("Delete this contact?")) return;
 
   try {
-    // deleteContact.php expects { contactId }
-    await apiRequest("deleteContact", { contactId });
+    // deleteContact.php expects { contactId, userId }
+    await apiRequest("deleteContact", { contactId, userId });
     searchContacts(document.getElementById("searchText")?.value.trim() || "");
   } catch (err) {
     alert(err.message);
