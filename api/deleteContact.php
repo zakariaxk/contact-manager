@@ -2,8 +2,20 @@
 	require_once 'db_config.php';
 	
 	$inData = getRequestInfo();
-	
-	$contactId = $inData["contactId"];
+	if( !isset($inData["contactId"]) || !isset($inData["userId"]) )
+	{
+		returnWithError("Missing required fields");
+		exit();
+	}
+
+	$contactId = (int)$inData["contactId"];
+	$userId = (int)$inData["userId"];
+
+	if( $contactId <= 0 || $userId <= 0 )
+	{
+		returnWithError("Invalid contact data");
+		exit();
+	}
 
 	$conn = get_db_connection();
 	if ($conn === null) 
@@ -12,8 +24,15 @@
 	} 
 	else
 	{
-		$stmt = $conn->prepare("DELETE FROM Contacts WHERE ID = ?");
-		$stmt->bind_param("i", $contactId);
+		$stmt = $conn->prepare("DELETE FROM Contacts WHERE ID = ? AND UserID = ?");
+		if( !$stmt )
+		{
+			returnWithError("Database prepare error");
+			$conn->close();
+			exit();
+		}
+
+		$stmt->bind_param("ii", $contactId, $userId);
 		$stmt->execute();
 		
 		if ($stmt->affected_rows > 0)
@@ -31,7 +50,8 @@
 
 	function getRequestInfo()
 	{
-		return json_decode(file_get_contents('php://input'), true);
+		$decoded = json_decode(file_get_contents('php://input'), true);
+		return is_array($decoded) ? $decoded : array();
 	}
 
 	function sendResultInfoAsJson($obj)
