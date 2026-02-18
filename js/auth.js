@@ -77,30 +77,18 @@ function doLogout() {
 // ----- cookies -----
 function saveCookie() {
   const minutes = 20;
-  const date = new Date();
-  date.setTime(date.getTime() + minutes * 60 * 1000);
-
-  document.cookie =
-    "firstName=" + encodeURIComponent(firstName) +
-    ",lastName=" + encodeURIComponent(lastName) +
-    ",userId=" + userId +
-    ";expires=" + date.toUTCString() +
-    ";path=/";
+  setCookie("firstName", firstName, minutes);
+  setCookie("lastName", lastName, minutes);
+  setCookie("userId", String(userId), minutes);
 }
 
 function readCookie() {
   userId = -1;
+  firstName = getCookie("firstName") || "";
+  lastName = getCookie("lastName") || "";
+  userId = parseInt(getCookie("userId") || "", 10);
 
-  const data = document.cookie.split(",");
-  for (let i = 0; i < data.length; i++) {
-    const tokens = data[i].trim().split("=");
-
-    if (tokens[0] === "firstName") firstName = decodeURIComponent(tokens[1] || "");
-    else if (tokens[0] === "lastName") lastName = decodeURIComponent(tokens[1] || "");
-    else if (tokens[0] === "userId") userId = parseInt((tokens[1] || "").trim(), 10);
-  }
-
-  if (!Number.isFinite(userId) || userId < 0) {
+  if (!Number.isFinite(userId) || userId <= 0) {
     window.location.href = "index.html";
   } else {
     const userNameEl = document.getElementById("userName");
@@ -109,7 +97,27 @@ function readCookie() {
 }
 
 function clearCookie() {
-  document.cookie = "firstName=; expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-  document.cookie = "lastName=; expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
-  document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+  document.cookie = "firstName=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+  document.cookie = "lastName=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+  document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+}
+
+function setCookie(name, value, minutes) {
+  const date = new Date();
+  date.setTime(date.getTime() + minutes * 60 * 1000);
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${date.toUTCString()}; path=/`;
+}
+
+function getCookie(name) {
+  const prefix = `${name}=`;
+  const parts = document.cookie.split(";");
+
+  for (let i = 0; i < parts.length; i++) {
+    const cookie = parts[i].trim();
+    if (cookie.startsWith(prefix)) {
+      return decodeURIComponent(cookie.substring(prefix.length));
+    }
+  }
+
+  return "";
 }

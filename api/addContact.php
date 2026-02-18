@@ -3,12 +3,24 @@
 	require_once 'db_config.php';
 
 	$inData = getRequestInfo();
-	
-	$firstName = $inData["firstName"];
-	$lastName = $inData["lastName"];
-	$email = $inData["email"];
-	$phone = $inData["phone"];
-	$userId = $inData["userId"];
+
+	if( !isset($inData["firstName"]) || !isset($inData["lastName"]) || !isset($inData["email"]) || !isset($inData["phone"]) || !isset($inData["userId"]) )
+	{
+		returnWithError("Missing required fields");
+		exit();
+	}
+
+	$firstName = trim($inData["firstName"]);
+	$lastName = trim($inData["lastName"]);
+	$email = trim($inData["email"]);
+	$phone = trim($inData["phone"]);
+	$userId = (int)$inData["userId"];
+
+	if( $firstName === "" || $email === "" || $phone === "" || $userId <= 0 )
+	{
+		returnWithError("Invalid contact data");
+		exit();
+	}
 
 	$conn = get_db_connection();
 	if (!$conn) 
@@ -17,11 +29,44 @@
 	} 
 	else
 	{
-		$stmt = $conn->prepare("INSERT into Contacts (FirstName, LastName, Email, Phone, UserID) VALUES (?, ?, ?, ?, ?)");
-		$stmt->bind_param("ssssi", $firstName, $lastName, $email, $phone, $userId);
-		$stmt->execute();
+		$dupStmt = $conn->prepare("SELECT ID FROM Contacts WHERE UserID=? AND LOWER(FirstName)=LOWER(?) AND LOWER(LastName)=LOWER(?) AND LOWER(Email)=LOWER(?) AND Phone=? LIMIT 1");
+		if( !$dupStmt )
+		{
+			returnWithError("Database prepare error");
+			$conn->close();
+			exit();
+		}
 
-		$contactId = $stmt->insert_id;
+		$dupStmt->bind_param("issss", $userId, $firstName, $lastName, $email, $phone);
+		$dupStmt->execute();
+		$dupResult = $dupStmt->get_result();
+		if( $dupResult && $dupResult->num_rows > 0 )
+		{
+			$dupStmt->close();
+			$conn->close();
+			returnWithError("Contact already exists");
+			exit();
+		}
+		$dupStmt->close();
+
+		$stmt = $conn->prepare("INSERT into Contacts (FirstName, LastName, Email, Phone, UserID, DateCreated) VALUES (?, ?, ?, ?, ?, NOW())");
+		if( !$stmt )
+		{
+			returnWithError("Database prepare error");
+			$conn->close();
+			exit();
+		}
+
+		$stmt->bind_param("ssssi", $firstName, $lastName, $email, $phone, $userId);
+		if( !$stmt->execute() )
+		{
+			$stmt->close();
+			$conn->close();
+			returnWithError("Failed to add contact");
+			exit();
+		}
+
+		$contactId = $conn->insert_id;
 
 		$stmt->close();
 		$conn->close();
@@ -36,7 +81,8 @@
 	 */
 	function getRequestInfo()
 	{
-		return json_decode(file_get_contents('php://input'), true);
+		$decoded = json_decode(file_get_contents('php://input'), true);
+		return is_array($decoded) ? $decoded : array();
 	}
 
 	/**
@@ -49,6 +95,7 @@
 	{
 		header('Content-type: application/json');
 		echo $obj;
+		exit();
 	}
 	
 	/**
@@ -59,8 +106,10 @@
 	 */
 	function returnWithError($err)
 	{
-		$retValue = '{"success":false,"error":"' . $err . '"}';
-		sendResultInfoAsJson($retValue);
+		sendResultInfoAsJson(json_encode(array(
+			"success" => false,
+			"error" => $err
+		)));
 	}
 
 	/**
@@ -71,7 +120,10 @@
 	 */
 	function returnWithSuccess($contactId)
 	{
-		$retValue = '{"success":true,"error":"","contactId":' . $contactId . '}';
-		sendResultInfoAsJson($retValue);
+		sendResultInfoAsJson(json_encode(array(
+			"success" => true,
+			"error" => "",
+			"contactId" => (int)$contactId
+		)));
 	}
 ?>
