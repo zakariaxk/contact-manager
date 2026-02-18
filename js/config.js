@@ -1,4 +1,4 @@
-const urlBase = window.location.protocol + '//poosdproject.space/api'; 
+const urlBase = window.location.origin + '/api'; 
 const extension = 'php';
 
 let userId = 0;
