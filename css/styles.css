@@ -1,222 +1,230 @@
-body 
-{
+/*  Base  */
+body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
     background-color: #f5f7fa;
-    padding: 0;
-    color: #333;
+    color: #1f2937;
 }
 
-.container {
-    width: 90%;
+.page {
+    padding: 40px 24px 60px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 32px;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 40px;
+/*  Cards  */
+
+.card {
+    background: white;
+    padding: 28px 26px 30px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
 }
 
-h2 {
-    margin-bottom: 20px;
+.card-title {
+    margin-bottom: 22px;
     color: #007bff;
 }
 
-sub {
-    font-size: 100%;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    margin-right: 20px;
+/*  Top Bar  */
+
+.topbar {
+    background: #0d1b2a;
+    color: white;
+    padding: 14px 28px;
 }
 
-.content {
+.topbar-inner {
     display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.form-container {
-    flex: 1;
-    min-width: 280px;
-    max-width: 400px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.contacts-container {
-    flex: 2;
-    min-width: 280px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.logo {
+    height: auto;
+}
+
+.brand-name {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/*  Form Layout  */
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field-label {
+    font-size: 14px;
+    font-weight: 500;
 }
 
 #contact-form input {
-    padding: 12px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin-top: 4px;
-    margin-bottom: 10px;
+    padding: 12px 14px;
+    font-size: 15px;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
 }
 
-/* Log out button styling */
-#logoutButton {
-    padding: 10px 20px;
+#contact-form input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+/*  Form Buttons  */
+
+.form-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.form-buttons button {
+    flex: 1;
+}
+
+/*  Buttons  */
+
+.btn {
+    padding: 11px 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
     font-size: 14px;
-    background-color: #dc3545; /* Red color for log out */
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer; /* Pointer to indicate clickable button */
-    
 }
 
-/* Submit button styling */
-#contact-form button {
-    padding: 12px;
-    font-size: 16px;
-    background-color: #007bff; /* Same blue as section titles */
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer; /* Pointer to indicate clickable button */
-    width: 50%;
-    margin-top: 12px;
+.btn-primary {
+    background: #007bff;
+    color: white;
 }
 
-/* Hover effect for submit button */
-#contact-form button:hover {
-    background-color: #0056b3; /* Darker shade on hover */
+.btn-accent {
+    background: #dc3545;
+    color: white;
 }
 
-/* Table container for contacts to ensure responsiveness */
-.table-container {
-    overflow-x: auto; /* Horizontal scroll for smaller screens */
+.btn:hover {
+    opacity: 0.92;
 }
 
-/* Styling the contacts table */
+/*  Search Row  */
+
+.search-row {
+    margin-bottom: 18px;
+}
+
+.search {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/*  Table  */
+
+.table-wrap {
+    margin-top: 10px;
+    overflow-x: auto;
+}
+
 #contacts-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 600px; /* Ensures table doesn’t shrink too much */
 }
 
-/* Table headers and cells */
-#contacts-table th, #contacts-table td {
-    padding: 15px;
-    border-bottom: 1px solid #e0e0e0; /* Light border for better separation */
-    text-align: left;
+#contacts-table th,
+#contacts-table td {
+    padding: 14px 12px;
+    border-bottom: 1px solid #e6e6e6;
     font-size: 14px;
 }
 
-/* Table header styling */
 #contacts-table th {
-    background-color: #007bff; /* Consistent blue color for headers */
-    color: #fff;
-    position: sticky; /* Keeps the header visible when scrolling */
-    top: 0;
+    background-color: #007bff;
+    color: white;
+    text-align: left;
 }
 
-/* Search input styling */
-#search {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
+/*  Action Buttons  */
 
-/* Action buttons (Edit and Delete) styling */
 .action-buttons {
     display: flex;
-    gap: 5px;
+    gap: 6px;
 }
 
-/* Individual action buttons */
 .action-buttons button {
-    flex: 1;
-    min-width: 70px;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    color: #fff;
-    font-size: 14px;
+    padding: 7px 10px;
+    font-size: 12px;
+    border-radius: 5px;
 }
 
-/* Edit button styling */
-.action-buttons button.edit {
-    background-color: #28a745; /* Green for edit */
+/*  Messages  */
+
+.msg {
+    margin-top: 8px;
+    font-size: 13px;
 }
 
-/* Delete button styling */
-.action-buttons button.delete {
-    background-color: #dc3545; /* Red for delete */
+/*  Footer  */
+
+.footer {
+    margin-top: 40px;
+    padding: 18px;
+    background: #0d1b2a;
+    color: white;
 }
 
-/* Hover effect for action buttons */
-.action-buttons button:hover {
-    opacity: 0.9;
+.footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
 }
 
-/* Responsive design: adjustments for medium screens */
-@media (max-width: 992px) {
-    /* Stack content vertically on smaller screens */
-    .content {
-        flex-direction: column;
+/*  Responsive  */
+
+@media (max-width: 900px) {
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
     }
 
-    /* Ensure containers use full width */
-    .form-container, .contacts-container {
-        max-width: 100%;
+    .page {
+        padding: 24px 16px 40px;
     }
 
-    /* Adjust table for smaller screens */
-    #contacts-table {
-        min-width: unset; /* Remove the minimum width */
-    }
-
-    /* Reduce font size and padding for table */
-    #contacts-table th, #contacts-table td {
-        font-size: 12px;
-        padding: 10px;
-    }
-
-    /* Adjust action buttons */
-    .action-buttons button {
-        padding: 6px 8px;
-        font-size: 12px;
-    }
-}
-
-/* Mobile design: further adjustments for smaller devices */
-@media (max-width: 576px) {
-    /* Smaller title font size */
-    h1 {
-        font-size: 24px;
-    }
-
-    /* Smaller section title font size */
-    h2 {
-        font-size: 18px;
-    }
-
-    /* Smaller input fields and buttons */
-    #contact-form input, #search {
-        font-size: 14px;
-        padding: 10px;
-    }
-
-    #contact-form button {
-        font-size: 14px;
-        padding: 10px;
+    .card {
+        padding: 22px 18px;
     }
 }
