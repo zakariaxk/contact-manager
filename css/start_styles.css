@@ -9,63 +9,33 @@ body {
 }
 
 .topbar {
-  background: #000;
-  color: #fff;
-  height: 95px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: #0d1b2a;
+  color: white;
+  padding: 8px 16px;
 }
 
 .topbar-center {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  gap: 10px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .topbar-logo {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
+  width: 50px;
+  height: auto;
   display: block;
 }
+
 .topbar-title {
-  margin-top: -15px;
-  font-size: 28px;
   font-weight: 600;
-  text-align: center;
-  line-height: 1;
-}
-
-
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-
-.brand-badge {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  background: rgba(255,255,255,0.15);
-  display: grid;
-  place-items: center;
-  font-weight: 600;
-  color: white;
-}
-
-
-.brand-name {
   font-size: 26px;
-  font-weight: 600;
-  line-height: 1;
-  color: #fff;
   margin: 0;
+  line-height: 1.1;
 }
+
 
 /* Page + Card */
 .page {
@@ -164,21 +134,19 @@ body {
 /* Utility */
 .hidden { display: none; }
 
+/* ===== Footer ===== */
+
 .footer {
-  height: 70px;
-  background: #000000;
-  color: rgba(255,255,255,0.85);
-  display: flex;
-  align-items: center;
+    margin-top: 40px;
+    padding: 18px;
+    background: #0d1b2a;
+    color: white;
 }
 
 .footer-inner {
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 20px;
-  text-align: center;
-  font-size: 13px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
 }
 
 /* Mobile tweaks */
@@ -186,7 +154,3 @@ body {
   .auth-card { padding: 18px; }
   .brand-name { font-size: 15px; }
 }
-
-
-
-
