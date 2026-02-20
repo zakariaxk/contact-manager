@@ -64,9 +64,9 @@ No local commands are required to use the app, simply open the deployed website 
 - Ability to host the static frontend files (`index.html`, `contact.html`, plus `css/`, `js/`, `images/`)
 
 ### Configuration
-The API requires database credentials via a `config.php` file (not committed to the repo). Create a `config.php` with your own database credentials in the location expected by the API code.
+The API requires database credentials via a `db_config.php` file (not committed to the repo). Create a `db_config.php` with your own database credentials in the location expected by the API code.
 
-> Note: The repo references 'config.php' for DB credentials, so you must provide your own before the API endpoints can connect to MySQL.
+> Note: The repo references 'db_config.php' for DB credentials, so you must provide your own before the API endpoints can connect to MySQL.
 
 ### Running Locally
 1. Place the project in your PHP server’s web root (or configure a vhost/site to point at it).
