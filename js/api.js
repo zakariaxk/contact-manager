@@ -1,6 +1,19 @@
 /* Fetch Wrapper*/ 
-async function apiRequest(endpointFileNoExt, payload = {}) {
-  const url = `${urlBase}/${endpointFileNoExt}.${extension}`;
+async function apiRequest(endpointFileNoExt, payload = {}, queryParams = null) {
+  let url = `${urlBase}/${endpointFileNoExt}.${extension}`;
+
+  if (queryParams && typeof queryParams === "object") {
+    const qs = new URLSearchParams();
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined && value !== null) {
+        qs.append(key, String(value));
+      }
+    }
+    const qsText = qs.toString();
+    if (qsText) {
+      url += `?${qsText}`;
+    }
+  }
 
   const res = await fetch(url, {
     method: "POST",

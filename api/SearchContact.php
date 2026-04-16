@@ -17,6 +17,10 @@
 	}
 	else
 	{
+		$sort = isset($_GET['sort']) ? strtolower(trim($_GET['sort'])) : 'asc';
+		$sort = ($sort === 'desc') ? 'desc' : 'asc';
+		$orderDirection = ($sort === 'desc') ? 'DESC' : 'ASC';
+
 		// checks both fields are recieved and valid
 		if( !isset($inData["search"]) || !isset($inData["userId"]) )
 		{
@@ -43,7 +47,8 @@
 			if( empty($searchTerm) )
 			{
 				// if search is empty, return all contacts for user
-				$stmt = $conn->prepare("SELECT ID, FirstName, LastName, Phone, Email, DateCreated FROM Contacts WHERE UserID=? ORDER BY FirstName ASC, LastName ASC, ID ASC");
+				$sql = "SELECT ID, FirstName, LastName, Phone, Email, DateCreated FROM Contacts WHERE UserID=? ORDER BY FirstName " . $orderDirection . ", LastName " . $orderDirection . ", ID ASC";
+				$stmt = $conn->prepare($sql);
 				$stmt->bind_param("i", $userId);
 				$stmt->execute();
 				$result = $stmt->get_result();
@@ -66,7 +71,8 @@
 			else
 			{
 				// if search not empty, search for partial matches in all fields
-				$stmt = $conn->prepare("SELECT ID, FirstName, LastName, Phone, Email, DateCreated FROM Contacts WHERE UserID=? AND (LOWER(FirstName) LIKE LOWER(?) OR LOWER(LastName) LIKE LOWER(?) OR Phone LIKE ? OR LOWER(Email) LIKE LOWER(?)) ORDER BY FirstName ASC, LastName ASC, ID ASC");
+				$sql = "SELECT ID, FirstName, LastName, Phone, Email, DateCreated FROM Contacts WHERE UserID=? AND (LOWER(FirstName) LIKE LOWER(?) OR LOWER(LastName) LIKE LOWER(?) OR Phone LIKE ? OR LOWER(Email) LIKE LOWER(?)) ORDER BY FirstName " . $orderDirection . ", LastName " . $orderDirection . ", ID ASC";
+				$stmt = $conn->prepare($sql);
 				if( !$stmt )
 				{
 					returnWithError("Database prepare error: " . $conn->error);
