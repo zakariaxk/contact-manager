@@ -1,7 +1,13 @@
 let searchTimer;
+let currentSortOrder = "asc";
 
 function initContactsPage() {
   readCookie();
+
+  const sortBtn = document.getElementById("sortToggleBtn");
+  if (sortBtn) {
+    sortBtn.textContent = "Sort: A to Z";
+  }
 
   const searchEl = document.getElementById("searchText");
   if (searchEl) {
@@ -21,8 +27,8 @@ async function searchContacts(query) {
   if (msg) msg.textContent = "";
 
   try {
-    // SearchContact.php expects { search, userId }
-    const data = await apiRequest("SearchContact", { search: query, userId });
+    // SearchContact.php expects { search, userId } and sort in query params
+    const data = await apiRequest("SearchContact", { search: query, userId }, { sort: currentSortOrder });
     const results = data.results || [];
     renderContacts(results);
     if (msg) msg.textContent = `${results.length} contact(s) found`;
@@ -30,6 +36,17 @@ async function searchContacts(query) {
     if (msg) msg.textContent = err.message;
     renderContacts([]);
   }
+}
+
+function toggleSortOrder() {
+  currentSortOrder = currentSortOrder === "asc" ? "desc" : "asc";
+
+  const sortBtn = document.getElementById("sortToggleBtn");
+  if (sortBtn) {
+    sortBtn.textContent = currentSortOrder === "asc" ? "Sort: A to Z" : "Sort: Z to A";
+  }
+
+  searchContacts(document.getElementById("searchText")?.value.trim() || "");
 }
 
 // Handles both Add and Edit depending on whether editContactId is set
